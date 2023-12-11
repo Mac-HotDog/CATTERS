@@ -12,4 +12,4 @@ config_version=5
 
 config/name="CATTERS"
 config/features=PackedStringArray("4.1", "Forward Plus")
-config/icon="res://cat-8157889.svg"
+config/icon="res://resources/cat-8157889.svg"

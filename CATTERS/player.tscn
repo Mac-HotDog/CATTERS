@@ -1,0 +1,309 @@
+[gd_scene load_steps=25 format=3 uid="uid://ba0ya40gk0msd"]
+
+[ext_resource type="Texture2D" uid="uid://cpo4ak2s6b35m" path="res://art/Tile.png" id="1_rbpt3"]
+
+[sub_resource type="GDScript" id="GDScript_4msjr"]
+script/source = "extends CharacterBody2D
+
+
+const SPEED = 300.0
+const JUMP_VELOCITY = -400.0
+
+# Get the gravity from the project settings to be synced with RigidBody nodes.
+var gravity = ProjectSettings.get_setting(\"physics/2d/default_gravity\")
+
+var suunta
+var state_machine
+@onready var anim_tree = $AnimationTree
+
+func _ready():
+	state_machine = anim_tree.get(\"parameters/playback\")
+
+
+func _physics_process(delta):
+	# Add the gravity.
+	if not is_on_floor():
+		velocity.y += gravity * delta
+
+	# Handle Jump.
+	if Input.is_action_just_pressed(\"ui_accept\") and is_on_floor():
+		velocity.y = JUMP_VELOCITY
+
+	# Get the input direction and handle the movement/deceleration.
+	# As good practice, you should replace UI actions with custom gameplay actions.
+	var direction = Input.get_axis(\"ui_left\", \"ui_right\")
+	if direction:
+		velocity.x = direction * SPEED
+		if direction == 1:
+			suunta = \"oikea\"
+			#print(velocity)
+		if direction  == -1:
+			suunta = \"vasen\"
+			#print(velocity)
+	else:
+		velocity.x = move_toward(velocity.x, 0, SPEED)
+		
+
+	#animaation ehdot
+
+	anim_tree.set(\"parameters/conditions/kävely oikea\",should_walk_right())
+	anim_tree.set(\"parameters/conditions/kävely vasen\",should_walk_left())
+	anim_tree.set(\"parameters/conditions/istumis idle\",should_sit_idle())
+	
+	move_and_slide()
+
+func should_walk_right():
+	if is_on_floor() and velocity.x > 0:
+		return true
+	else:
+		return false
+
+func should_walk_left():
+	if is_on_floor() and velocity.x < 0:
+		return true
+	else:
+		return false
+
+func should_sit_idle():
+	if velocity == Vector2.ZERO:
+		return true
+	else:
+		return false
+"
+
+[sub_resource type="Animation" id="Animation_v5bjy"]
+resource_name = "walk_right"
+length = 0.8
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame_coords")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [Vector2i(0, 6), Vector2i(1, 6), Vector2i(2, 6), Vector2i(3, 6), Vector2i(4, 6), Vector2i(5, 6), Vector2i(6, 6), Vector2i(7, 6)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite2D:flip_h")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+
+[sub_resource type="Animation" id="Animation_805oe"]
+resource_name = "jump_right"
+length = 0.8
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame_coords")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [Vector2i(0, 17), Vector2i(0, 17), Vector2i(1, 17), Vector2i(2, 17), Vector2i(0, 18), Vector2i(1, 18), Vector2i(2, 18), Vector2i(3, 18)]
+}
+
+[sub_resource type="Animation" id="Animation_wk3h0"]
+resource_name = "walk_left"
+length = 0.8
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:flip_h")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite2D:frame_coords")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [Vector2i(0, 6), Vector2i(0, 6), Vector2i(1, 6), Vector2i(2, 6), Vector2i(3, 6), Vector2i(4, 6), Vector2i(5, 6), Vector2i(6, 6)]
+}
+
+[sub_resource type="Animation" id="Animation_0erbh"]
+resource_name = "jump_left"
+length = 0.8
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:flip_h")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite2D:frame_coords")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [Vector2i(0, 17), Vector2i(1, 17), Vector2i(2, 17), Vector2i(3, 17), Vector2i(0, 18), Vector2i(1, 18), Vector2i(2, 18), Vector2i(3, 18)]
+}
+
+[sub_resource type="Animation" id="Animation_77ie5"]
+resource_name = "idle_sit_right"
+length = 0.4
+loop_mode = 2
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame_coords")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [Vector2i(0, 1), Vector2i(1, 1), Vector2i(2, 1), Vector2i(3, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_x4wxw"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame_coords")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [Vector2i(1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_m7ypv"]
+_data = {
+"RESET": SubResource("Animation_x4wxw"),
+"idle_sit_right": SubResource("Animation_77ie5"),
+"jump_left": SubResource("Animation_0erbh"),
+"jump_right": SubResource("Animation_805oe"),
+"walk_left": SubResource("Animation_wk3h0"),
+"walk_right": SubResource("Animation_v5bjy")
+}
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_rnxmd"]
+size = Vector2(64, 51.5)
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_x3vbl"]
+animation = &"idle_sit_right"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_o6qlw"]
+animation = &"idle_sit_right"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_irpwv"]
+animation = &"jump_left"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_sqvuk"]
+animation = &"jump_right"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_sanhq"]
+animation = &"walk_left"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_ljarx"]
+animation = &"walk_right"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_dxibs"]
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_cxool"]
+xfade_time = 0.1
+advance_mode = 2
+advance_condition = &"kävely oikea"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_0pvcq"]
+advance_mode = 2
+advance_condition = &"kävely vasen"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_6cquv"]
+advance_mode = 2
+advance_condition = &"kävely oikea"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_luqax"]
+advance_mode = 2
+advance_condition = &"kävely vasen"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_xbh1t"]
+advance_mode = 2
+advance_condition = &"istumis idle"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_jbngu"]
+advance_mode = 2
+advance_condition = &"istumis idle"
+
+[sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_il2s0"]
+states/Start/position = Vector2(74, 100)
+states/idle_sit_right/node = SubResource("AnimationNodeAnimation_o6qlw")
+states/idle_sit_right/position = Vector2(228, 100)
+"states/idle_sit_right 2/node" = SubResource("AnimationNodeAnimation_x3vbl")
+"states/idle_sit_right 2/position" = Vector2(413, 86)
+states/jump_left/node = SubResource("AnimationNodeAnimation_irpwv")
+states/jump_left/position = Vector2(79, 344)
+states/jump_right/node = SubResource("AnimationNodeAnimation_sqvuk")
+states/jump_right/position = Vector2(373, 344)
+states/walk_left/node = SubResource("AnimationNodeAnimation_sanhq")
+states/walk_left/position = Vector2(79, 267)
+states/walk_right/node = SubResource("AnimationNodeAnimation_ljarx")
+states/walk_right/position = Vector2(373, 267)
+transitions = ["Start", "idle_sit_right", SubResource("AnimationNodeStateMachineTransition_dxibs"), "idle_sit_right", "walk_right", SubResource("AnimationNodeStateMachineTransition_cxool"), "idle_sit_right", "walk_left", SubResource("AnimationNodeStateMachineTransition_0pvcq"), "walk_left", "walk_right", SubResource("AnimationNodeStateMachineTransition_6cquv"), "walk_right", "walk_left", SubResource("AnimationNodeStateMachineTransition_luqax"), "walk_right", "idle_sit_right", SubResource("AnimationNodeStateMachineTransition_xbh1t"), "walk_left", "idle_sit_right", SubResource("AnimationNodeStateMachineTransition_jbngu")]
+graph_offset = Vector2(0, 40)
+
+[node name="Player" type="CharacterBody2D"]
+script = SubResource("GDScript_4msjr")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(3, 3)
+texture = ExtResource("1_rbpt3")
+hframes = 8
+vframes = 37
+frame = 9
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_m7ypv")
+}
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(-1, 17.25)
+shape = SubResource("RectangleShape2D_rnxmd")
+
+[node name="AnimationTree" type="AnimationTree" parent="."]
+tree_root = SubResource("AnimationNodeStateMachine_il2s0")
+anim_player = NodePath("../AnimationPlayer")
+active = true
+"parameters/conditions/istumis idle" = false
+"parameters/conditions/kävely oikea" = false
+"parameters/conditions/kävely vasen" = false

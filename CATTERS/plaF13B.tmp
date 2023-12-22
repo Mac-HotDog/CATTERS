@@ -121,12 +121,9 @@ func should_attack():
 
 func timer_func(x):
 	timer_called = true
+	await get_tree().create_timer(5).timeout
 	if x == \"allow_sit_idle\":
-		await get_tree().create_timer(5).timeout
 		allow_sit_idle = true
-	if x == \"attack\":
-		await get_tree().create_timer(0.3).timeout
-		attackarea.disabled = true 
 	timer_called = false
 
 

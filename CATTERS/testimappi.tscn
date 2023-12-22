@@ -1,6 +1,7 @@
-[gd_scene load_steps=5 format=3 uid="uid://bo23tkm6h71dv"]
+[gd_scene load_steps=6 format=3 uid="uid://bo23tkm6h71dv"]
 
 [ext_resource type="PackedScene" uid="uid://ba0ya40gk0msd" path="res://player.tscn" id="1_78t34"]
+[ext_resource type="PackedScene" uid="uid://eipunqrsom5u" path="res://snowman.tscn" id="2_bcl2g"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_vh1cs"]
 
@@ -61,3 +62,6 @@ shape = SubResource("CapsuleShape2D_id1l1")
 
 [node name="Player" parent="." instance=ExtResource("1_78t34")]
 position = Vector2(305, 424)
+
+[node name="snowman" parent="." instance=ExtResource("2_bcl2g")]
+position = Vector2(559, 474)

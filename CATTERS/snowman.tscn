@@ -1,24 +1,7 @@
-[gd_scene load_steps=8 format=3 uid="uid://eipunqrsom5u"]
+[gd_scene load_steps=14 format=3 uid="uid://eipunqrsom5u"]
 
 [ext_resource type="Script" path="res://snowman.gd" id="1_04als"]
 [ext_resource type="Texture2D" uid="uid://tdba55ig11ci" path="res://art/Snowman-tileset2.png" id="1_lhxqs"]
-
-[sub_resource type="Animation" id="Animation_f04g2"]
-resource_name = "idle"
-length = 0.4
-loop_mode = 1
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Sprite2D:frame_coords")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.1, 0.2, 0.3),
-"transitions": PackedFloat32Array(1, 1, 1, 1),
-"update": 1,
-"values": [Vector2i(0, 0), Vector2i(1, 0), Vector2i(2, 0), Vector2i(3, 0)]
-}
 
 [sub_resource type="Animation" id="Animation_idv2h"]
 length = 0.001
@@ -33,6 +16,23 @@ tracks/0/keys = {
 "transitions": PackedFloat32Array(1),
 "update": 1,
 "values": [Vector2i(1, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_f04g2"]
+resource_name = "idle"
+length = 0.8
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame_coords")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2, 0.4, 0.6),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [Vector2i(0, 0), Vector2i(1, 0), Vector2i(2, 0), Vector2i(3, 0)]
 }
 
 [sub_resource type="Animation" id="Animation_xo18e"]
@@ -61,6 +61,30 @@ _data = {
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_20qis"]
 size = Vector2(17, 15.5)
 
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_ire0q"]
+animation = &"idle"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_mbq8x"]
+animation = &"jump"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_04ug4"]
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_3m1xr"]
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_uhnct"]
+switch_mode = 2
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_gf8en"]
+states/Start/position = Vector2(152, 97)
+states/idle/node = SubResource("AnimationNodeAnimation_ire0q")
+states/idle/position = Vector2(309, 97)
+states/jump/node = SubResource("AnimationNodeAnimation_mbq8x")
+states/jump/position = Vector2(448, 97)
+transitions = ["Start", "idle", SubResource("AnimationNodeStateMachineTransition_04ug4"), "idle", "jump", SubResource("AnimationNodeStateMachineTransition_3m1xr"), "jump", "idle", SubResource("AnimationNodeStateMachineTransition_uhnct")]
+
 [node name="snowman" type="CharacterBody2D"]
 script = ExtResource("1_04als")
 
@@ -78,3 +102,10 @@ libraries = {
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(-0.5, 2.75)
 shape = SubResource("RectangleShape2D_20qis")
+
+[node name="AnimationTree" type="AnimationTree" parent="."]
+tree_root = SubResource("AnimationNodeStateMachine_gf8en")
+anim_player = NodePath("../AnimationPlayer")
+
+[node name="RayCast2D" type="RayCast2D" parent="."]
+position = Vector2(-18, -37)

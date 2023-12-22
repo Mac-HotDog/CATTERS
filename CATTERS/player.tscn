@@ -1,4 +1,4 @@
-[gd_scene load_steps=37 format=3 uid="uid://ba0ya40gk0msd"]
+[gd_scene load_steps=43 format=3 uid="uid://ba0ya40gk0msd"]
 
 [ext_resource type="Texture2D" uid="uid://cpo4ak2s6b35m" path="res://art/Tile.png" id="1_rbpt3"]
 
@@ -28,17 +28,18 @@ func _ready():
 
 
 func _physics_process(delta):
+	inputs()
 	# Add the gravity.
 	if not is_on_floor():
 		velocity.y += gravity * delta
 
 	# Handle Jump.
-	if Input.is_action_just_pressed(\"ui_accept\") and is_on_floor():
-		velocity.y = JUMP_VELOCITY
-		
-		jumped = true
-		await get_tree().create_timer(0.1).timeout
-		jumped = false
+#	if Input.is_action_just_pressed(\"ui_accept\") and is_on_floor():
+#		velocity.y = JUMP_VELOCITY
+#
+#		jumped = true
+#		await get_tree().create_timer(0.1).timeout
+#		jumped = false
 
 	# Get the input direction and handle the movement/deceleration.
 	# As good practice, you should replace UI actions with custom gameplay actions.
@@ -66,9 +67,19 @@ func _physics_process(delta):
 	anim_tree.set(\"parameters/conditions/seisomis idle\",should_stand_idle())
 	anim_tree.set(\"parameters/conditions/istumis idle\",should_sit_idle())
 	anim_tree.set(\"parameters/conditions/hyppy\",should_jump())
-	print(should_sit_idle())
+
 
 	move_and_slide()
+
+
+func inputs():
+	if Input.is_action_just_pressed(\"ui_accept\") and is_on_floor():
+		velocity.y = JUMP_VELOCITY
+		jumped = true
+		await get_tree().create_timer(0.1).timeout
+		jumped = false
+	if Input.is_action_just_pressed(\"ui_accept\"):
+		pass
 
 #animaatioita varten
 func should_walk():
@@ -162,6 +173,39 @@ tracks/0/keys = {
 "values": [Vector2i(0, 32), Vector2i(1, 32), Vector2i(2, 32), Vector2i(3, 32)]
 }
 
+[sub_resource type="Animation" id="Animation_iv34x"]
+resource_name = "dead"
+length = 0.4
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame_coords")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [Vector2i(0, 28), Vector2i(1, 28), Vector2i(2, 28), Vector2i(3, 28)]
+}
+
+[sub_resource type="Animation" id="Animation_tboio"]
+resource_name = "death"
+length = 0.9
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame_coords")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [Vector2i(0, 27), Vector2i(1, 27), Vector2i(2, 27), Vector2i(3, 27), Vector2i(4, 27), Vector2i(5, 27), Vector2i(6, 27), Vector2i(7, 27), Vector2i(0, 28)]
+}
+
 [sub_resource type="Animation" id="Animation_77ie5"]
 resource_name = "idle_sit"
 length = 0.4
@@ -228,23 +272,6 @@ tracks/0/keys = {
 "values": [Vector2i(0, 5), Vector2i(1, 5), Vector2i(2, 5), Vector2i(3, 5), Vector2i(4, 5), Vector2i(5, 5), Vector2i(6, 5), Vector2i(7, 5)]
 }
 
-[sub_resource type="Animation" id="Animation_v5bjy"]
-resource_name = "walk"
-length = 0.8
-loop_mode = 1
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Sprite2D:frame_coords")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1),
-"update": 1,
-"values": [Vector2i(0, 6), Vector2i(1, 6), Vector2i(2, 6), Vector2i(3, 6), Vector2i(4, 6), Vector2i(5, 6), Vector2i(6, 6), Vector2i(7, 6)]
-}
-
 [sub_resource type="Animation" id="Animation_hx1d7"]
 resource_name = "taking_dmg"
 length = 0.2
@@ -261,25 +288,9 @@ tracks/0/keys = {
 "values": [Vector2i(0, 26), Vector2i(1, 26)]
 }
 
-[sub_resource type="Animation" id="Animation_tboio"]
-resource_name = "death"
-length = 0.9
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Sprite2D:frame_coords")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1),
-"update": 1,
-"values": [Vector2i(0, 27), Vector2i(1, 27), Vector2i(2, 27), Vector2i(3, 27), Vector2i(4, 27), Vector2i(5, 27), Vector2i(6, 27), Vector2i(7, 27), Vector2i(0, 28)]
-}
-
-[sub_resource type="Animation" id="Animation_iv34x"]
-resource_name = "dead"
-length = 0.4
+[sub_resource type="Animation" id="Animation_v5bjy"]
+resource_name = "walk"
+length = 0.8
 loop_mode = 1
 tracks/0/type = "value"
 tracks/0/imported = false
@@ -288,10 +299,10 @@ tracks/0/path = NodePath("Sprite2D:frame_coords")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.1, 0.2, 0.3),
-"transitions": PackedFloat32Array(1, 1, 1, 1),
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1),
 "update": 1,
-"values": [Vector2i(0, 28), Vector2i(1, 28), Vector2i(2, 28), Vector2i(3, 28)]
+"values": [Vector2i(0, 6), Vector2i(1, 6), Vector2i(2, 6), Vector2i(3, 6), Vector2i(4, 6), Vector2i(5, 6), Vector2i(6, 6), Vector2i(7, 6)]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_m7ypv"]
@@ -381,11 +392,35 @@ advance_condition = &"kävely"
 advance_mode = 2
 advance_condition = &"istumis idle"
 
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_gpk1e"]
+advance_mode = 2
+advance_condition = &"fast melee"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_gulnq"]
+switch_mode = 2
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_dtxlx"]
+advance_mode = 2
+advance_condition = &"fast melee"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_4v2v5"]
+advance_mode = 2
+advance_condition = &"fast melee"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_t587b"]
+advance_mode = 2
+advance_condition = &"fast melee"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_wbqd4"]
+advance_mode = 2
+advance_condition = &"fast melee"
+
 [sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_il2s0"]
 states/End/position = Vector2(1084, 68)
 states/Start/position = Vector2(36, -1.32761)
 states/attack_melee_fast/node = SubResource("AnimationNodeAnimation_ljogx")
-states/attack_melee_fast/position = Vector2(728.212, 136.672)
+states/attack_melee_fast/position = Vector2(714.212, -1.32761)
 states/idle_sit/node = SubResource("AnimationNodeAnimation_4g4mg")
 states/idle_sit/position = Vector2(160, -47.4864)
 states/idle_sit2/node = SubResource("AnimationNodeAnimation_lpahj")
@@ -393,11 +428,11 @@ states/idle_sit2/position = Vector2(160, 173.514)
 states/jump/node = SubResource("AnimationNodeAnimation_llwa1")
 states/jump/position = Vector2(391, -47.4864)
 states/standing_idle/node = SubResource("AnimationNodeAnimation_dfgvi")
-states/standing_idle/position = Vector2(531, 62.5136)
+states/standing_idle/position = Vector2(-8, 108.514)
 states/walk/node = SubResource("AnimationNodeAnimation_1khs3")
 states/walk/position = Vector2(391, 173.514)
-transitions = ["Start", "idle_sit", SubResource("AnimationNodeStateMachineTransition_fu78r"), "idle_sit", "idle_sit2", SubResource("AnimationNodeStateMachineTransition_hnu0q"), "idle_sit", "jump", SubResource("AnimationNodeStateMachineTransition_1p55t"), "idle_sit", "walk", SubResource("AnimationNodeStateMachineTransition_vtpng"), "walk", "jump", SubResource("AnimationNodeStateMachineTransition_jy8my"), "idle_sit2", "walk", SubResource("AnimationNodeStateMachineTransition_07lef"), "idle_sit2", "jump", SubResource("AnimationNodeStateMachineTransition_6ukaf"), "jump", "standing_idle", SubResource("AnimationNodeStateMachineTransition_mkx27"), "standing_idle", "idle_sit", SubResource("AnimationNodeStateMachineTransition_c820t"), "walk", "standing_idle", SubResource("AnimationNodeStateMachineTransition_vbdx3"), "standing_idle", "jump", SubResource("AnimationNodeStateMachineTransition_8y76b"), "standing_idle", "walk", SubResource("AnimationNodeStateMachineTransition_ehoe2"), "walk", "idle_sit", SubResource("AnimationNodeStateMachineTransition_uym0o")]
-graph_offset = Vector2(-135.788, -81.5855)
+transitions = ["Start", "idle_sit", SubResource("AnimationNodeStateMachineTransition_fu78r"), "idle_sit", "idle_sit2", SubResource("AnimationNodeStateMachineTransition_hnu0q"), "idle_sit", "jump", SubResource("AnimationNodeStateMachineTransition_1p55t"), "idle_sit", "walk", SubResource("AnimationNodeStateMachineTransition_vtpng"), "walk", "jump", SubResource("AnimationNodeStateMachineTransition_jy8my"), "idle_sit2", "walk", SubResource("AnimationNodeStateMachineTransition_07lef"), "idle_sit2", "jump", SubResource("AnimationNodeStateMachineTransition_6ukaf"), "jump", "standing_idle", SubResource("AnimationNodeStateMachineTransition_mkx27"), "standing_idle", "idle_sit", SubResource("AnimationNodeStateMachineTransition_c820t"), "walk", "standing_idle", SubResource("AnimationNodeStateMachineTransition_vbdx3"), "standing_idle", "jump", SubResource("AnimationNodeStateMachineTransition_8y76b"), "standing_idle", "walk", SubResource("AnimationNodeStateMachineTransition_ehoe2"), "walk", "idle_sit", SubResource("AnimationNodeStateMachineTransition_uym0o"), "walk", "attack_melee_fast", SubResource("AnimationNodeStateMachineTransition_gpk1e"), "attack_melee_fast", "standing_idle", SubResource("AnimationNodeStateMachineTransition_gulnq"), "jump", "attack_melee_fast", SubResource("AnimationNodeStateMachineTransition_dtxlx"), "idle_sit", "attack_melee_fast", SubResource("AnimationNodeStateMachineTransition_4v2v5"), "idle_sit2", "attack_melee_fast", SubResource("AnimationNodeStateMachineTransition_t587b"), "standing_idle", "attack_melee_fast", SubResource("AnimationNodeStateMachineTransition_wbqd4")]
+graph_offset = Vector2(-135.788, -47.9803)
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_8twxe"]
 
@@ -425,6 +460,7 @@ shape = SubResource("RectangleShape2D_rnxmd")
 tree_root = SubResource("AnimationNodeStateMachine_il2s0")
 anim_player = NodePath("../AnimationPlayer")
 active = true
+"parameters/conditions/fast melee" = false
 parameters/conditions/hyppy = false
 "parameters/conditions/istumis idle" = false
 "parameters/conditions/kävely" = false

@@ -1,6 +1,9 @@
-[gd_scene load_steps=37 format=3 uid="uid://ba0ya40gk0msd"]
+[gd_scene load_steps=40 format=3 uid="uid://ba0ya40gk0msd"]
 
 [ext_resource type="Texture2D" uid="uid://cpo4ak2s6b35m" path="res://art/Tile.png" id="1_rbpt3"]
+[ext_resource type="Script" path="res://hpbar.gd" id="2_ng4mt"]
+[ext_resource type="Texture2D" uid="uid://d5gk258bwrly" path="res://resources/barHorizontal_yellow (2).png" id="3_062de"]
+[ext_resource type="Texture2D" uid="uid://c1m168h115ixx" path="res://resources/barHorizontal_green (2).png" id="4_gxnvh"]
 
 [sub_resource type="GDScript" id="GDScript_4msjr"]
 script/source = "extends CharacterBody2D
@@ -14,7 +17,7 @@ var gravity = ProjectSettings.get_setting(\"physics/2d/default_gravity\")
 
 var suunta = \"oikea\"
 var timer_called = false #lippu timer funktiolle
-
+var hp = 10
 
 var state_machine
 var allow_sit_idle = false #lippu
@@ -58,7 +61,8 @@ func _physics_process(delta):
 		#print(velocity.x)
 	else:
 		velocity.x = move_toward(velocity.x, 0, SPEED)
-
+	if hp <= 0:
+		get_tree().change_scene_to_file(\"res://youLose.tscn\")
 
 	#animaation ehdot
 
@@ -66,7 +70,7 @@ func _physics_process(delta):
 	anim_tree.set(\"parameters/conditions/seisomis idle\",should_stand_idle())
 	anim_tree.set(\"parameters/conditions/istumis idle\",should_sit_idle())
 	anim_tree.set(\"parameters/conditions/hyppy\",should_jump())
-	print(should_sit_idle())
+	#print(should_sit_idle())
 
 	move_and_slide()
 
@@ -113,6 +117,10 @@ func timer_func(x):
 func _on_animation_tree_animation_started(anim_name):
 	if anim_name == \"jump\":
 		allow_sit_idle = false
+
+func take_damage(ammount):
+	hp = hp - ammount
+	$HPbar/Control/hpvalue.value = hp
 "
 
 [sub_resource type="Animation" id="Animation_x4wxw"]
@@ -160,6 +168,39 @@ tracks/0/keys = {
 "transitions": PackedFloat32Array(1, 1, 1, 1),
 "update": 1,
 "values": [Vector2i(0, 32), Vector2i(1, 32), Vector2i(2, 32), Vector2i(3, 32)]
+}
+
+[sub_resource type="Animation" id="Animation_iv34x"]
+resource_name = "dead"
+length = 0.4
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame_coords")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [Vector2i(0, 28), Vector2i(1, 28), Vector2i(2, 28), Vector2i(3, 28)]
+}
+
+[sub_resource type="Animation" id="Animation_tboio"]
+resource_name = "death"
+length = 0.9
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame_coords")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [Vector2i(0, 27), Vector2i(1, 27), Vector2i(2, 27), Vector2i(3, 27), Vector2i(4, 27), Vector2i(5, 27), Vector2i(6, 27), Vector2i(7, 27), Vector2i(0, 28)]
 }
 
 [sub_resource type="Animation" id="Animation_77ie5"]
@@ -228,23 +269,6 @@ tracks/0/keys = {
 "values": [Vector2i(0, 5), Vector2i(1, 5), Vector2i(2, 5), Vector2i(3, 5), Vector2i(4, 5), Vector2i(5, 5), Vector2i(6, 5), Vector2i(7, 5)]
 }
 
-[sub_resource type="Animation" id="Animation_v5bjy"]
-resource_name = "walk"
-length = 0.8
-loop_mode = 1
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Sprite2D:frame_coords")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1),
-"update": 1,
-"values": [Vector2i(0, 6), Vector2i(1, 6), Vector2i(2, 6), Vector2i(3, 6), Vector2i(4, 6), Vector2i(5, 6), Vector2i(6, 6), Vector2i(7, 6)]
-}
-
 [sub_resource type="Animation" id="Animation_hx1d7"]
 resource_name = "taking_dmg"
 length = 0.2
@@ -261,25 +285,9 @@ tracks/0/keys = {
 "values": [Vector2i(0, 26), Vector2i(1, 26)]
 }
 
-[sub_resource type="Animation" id="Animation_tboio"]
-resource_name = "death"
-length = 0.9
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Sprite2D:frame_coords")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1),
-"update": 1,
-"values": [Vector2i(0, 27), Vector2i(1, 27), Vector2i(2, 27), Vector2i(3, 27), Vector2i(4, 27), Vector2i(5, 27), Vector2i(6, 27), Vector2i(7, 27), Vector2i(0, 28)]
-}
-
-[sub_resource type="Animation" id="Animation_iv34x"]
-resource_name = "dead"
-length = 0.4
+[sub_resource type="Animation" id="Animation_v5bjy"]
+resource_name = "walk"
+length = 0.8
 loop_mode = 1
 tracks/0/type = "value"
 tracks/0/imported = false
@@ -288,10 +296,10 @@ tracks/0/path = NodePath("Sprite2D:frame_coords")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.1, 0.2, 0.3),
-"transitions": PackedFloat32Array(1, 1, 1, 1),
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1),
 "update": 1,
-"values": [Vector2i(0, 28), Vector2i(1, 28), Vector2i(2, 28), Vector2i(3, 28)]
+"values": [Vector2i(0, 6), Vector2i(1, 6), Vector2i(2, 6), Vector2i(3, 6), Vector2i(4, 6), Vector2i(5, 6), Vector2i(6, 6), Vector2i(7, 6)]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_m7ypv"]
@@ -422,9 +430,11 @@ position = Vector2(-1, 17.25)
 shape = SubResource("RectangleShape2D_rnxmd")
 
 [node name="AnimationTree" type="AnimationTree" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_m7ypv")
+}
 tree_root = SubResource("AnimationNodeStateMachine_il2s0")
 anim_player = NodePath("../AnimationPlayer")
-active = true
 parameters/conditions/hyppy = false
 "parameters/conditions/istumis idle" = false
 "parameters/conditions/kävely" = false
@@ -438,4 +448,29 @@ position = Vector2(41, 11)
 scale = Vector2(5, 5)
 shape = SubResource("CircleShape2D_8twxe")
 
+[node name="HPbar" type="Node2D" parent="."]
+position = Vector2(-43, -34)
+scale = Vector2(0.52, 0.64)
+script = ExtResource("2_ng4mt")
+
+[node name="Timer" type="Timer" parent="HPbar"]
+one_shot = true
+autostart = true
+
+[node name="Control" type="Control" parent="HPbar"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="hpvalue" type="TextureProgressBar" parent="HPbar/Control"]
+layout_mode = 0
+offset_right = 200.0
+offset_bottom = 40.0
+max_value = 10.0
+value = 10.0
+texture_under = ExtResource("3_062de")
+texture_progress = ExtResource("4_gxnvh")
+
 [connection signal="animation_started" from="AnimationTree" to="." method="_on_animation_tree_animation_started"]
+[connection signal="timeout" from="HPbar/Timer" to="HPbar" method="_on_timer_timeout"]

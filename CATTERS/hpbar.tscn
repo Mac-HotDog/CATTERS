@@ -1,0 +1,20 @@
+[gd_scene load_steps=3 format=3 uid="uid://dabw3iikf58i4"]
+
+[ext_resource type="Texture2D" uid="uid://d5gk258bwrly" path="res://resources/barHorizontal_yellow (2).png" id="1_u00s0"]
+[ext_resource type="Texture2D" uid="uid://c1m168h115ixx" path="res://resources/barHorizontal_green (2).png" id="2_u3dft"]
+
+[node name="HPbar" type="Node2D"]
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="hpvalue" type="TextureProgressBar" parent="Control"]
+offset_right = 200.0
+offset_bottom = 40.0
+max_value = 10.0
+value = 10.0
+texture_under = ExtResource("1_u00s0")
+texture_progress = ExtResource("2_u3dft")

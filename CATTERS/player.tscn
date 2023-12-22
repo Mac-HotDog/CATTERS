@@ -46,7 +46,8 @@ func _physics_process(delta):
 	if Input.is_action_just_pressed(\"attack\"):
 		$Sprite2D/Area2Dattack/CollisionShape2D.disabled = false
 		attacking = true 
-		print($Sprite2D/Area2Dattack/CollisionShape2D.position)
+		
+		#print($Sprite2D/Area2Dattack/CollisionShape2D.position)
 
 	# Get the input direction and handle the movement/deceleration.
 	# As good practice, you should replace UI actions with custom gameplay actions.
@@ -443,7 +444,7 @@ states/standing_idle/position = Vector2(531, 62.5136)
 states/walk/node = SubResource("AnimationNodeAnimation_1khs3")
 states/walk/position = Vector2(391, 173.514)
 transitions = ["Start", "idle_sit", SubResource("AnimationNodeStateMachineTransition_fu78r"), "idle_sit", "idle_sit2", SubResource("AnimationNodeStateMachineTransition_hnu0q"), "idle_sit", "jump", SubResource("AnimationNodeStateMachineTransition_1p55t"), "idle_sit", "walk", SubResource("AnimationNodeStateMachineTransition_vtpng"), "walk", "jump", SubResource("AnimationNodeStateMachineTransition_jy8my"), "idle_sit2", "walk", SubResource("AnimationNodeStateMachineTransition_07lef"), "idle_sit2", "jump", SubResource("AnimationNodeStateMachineTransition_6ukaf"), "jump", "standing_idle", SubResource("AnimationNodeStateMachineTransition_mkx27"), "standing_idle", "idle_sit", SubResource("AnimationNodeStateMachineTransition_c820t"), "walk", "standing_idle", SubResource("AnimationNodeStateMachineTransition_vbdx3"), "standing_idle", "jump", SubResource("AnimationNodeStateMachineTransition_8y76b"), "standing_idle", "walk", SubResource("AnimationNodeStateMachineTransition_ehoe2"), "walk", "idle_sit", SubResource("AnimationNodeStateMachineTransition_uym0o"), "idle_sit", "attack_melee_fast", SubResource("AnimationNodeStateMachineTransition_sfvjt"), "jump", "attack_melee_fast", SubResource("AnimationNodeStateMachineTransition_vt56k"), "standing_idle", "attack_melee_fast", SubResource("AnimationNodeStateMachineTransition_dovhn"), "walk", "attack_melee_fast", SubResource("AnimationNodeStateMachineTransition_s8e62"), "idle_sit2", "attack_melee_fast", SubResource("AnimationNodeStateMachineTransition_rlxje"), "attack_melee_fast", "idle_sit", SubResource("AnimationNodeStateMachineTransition_c2evb")]
-graph_offset = Vector2(-135.788, -132.979)
+graph_offset = Vector2(-135.788, -163.815)
 
 [node name="Player" type="CharacterBody2D"]
 script = SubResource("GDScript_4msjr")
@@ -454,9 +455,9 @@ hframes = 8
 vframes = 38
 frame = 9
 
-[node name="Area2Dattack" type="Area2D" parent="Sprite2D"]
+[node name="Area2Dattack" type="Area2D" parent="Sprite2D" groups=["nyrkki"]]
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Sprite2D/Area2Dattack"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Sprite2D/Area2Dattack" groups=["nyrkki"]]
 position = Vector2(18, 6)
 scale = Vector2(5, 5)
 shape = SubResource("CircleShape2D_8twxe")
@@ -487,10 +488,6 @@ position = Vector2(-43, -34)
 scale = Vector2(0.52, 0.64)
 script = ExtResource("2_ng4mt")
 
-[node name="Timer" type="Timer" parent="HPbar"]
-one_shot = true
-autostart = true
-
 [node name="Control" type="Control" parent="HPbar"]
 layout_mode = 3
 anchors_preset = 0
@@ -507,4 +504,3 @@ texture_under = ExtResource("3_062de")
 texture_progress = ExtResource("4_gxnvh")
 
 [connection signal="animation_started" from="AnimationTree" to="." method="_on_animation_tree_animation_started"]
-[connection signal="timeout" from="HPbar/Timer" to="HPbar" method="_on_timer_timeout"]

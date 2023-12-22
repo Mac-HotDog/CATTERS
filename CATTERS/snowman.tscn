@@ -1,7 +1,9 @@
-[gd_scene load_steps=9 format=3 uid="uid://eipunqrsom5u"]
+[gd_scene load_steps=11 format=3 uid="uid://eipunqrsom5u"]
 
 [ext_resource type="Script" path="res://snowman.gd" id="1_04als"]
 [ext_resource type="Texture2D" uid="uid://tdba55ig11ci" path="res://art/Snowman-tileset2.png" id="1_lhxqs"]
+[ext_resource type="Texture2D" uid="uid://d5gk258bwrly" path="res://resources/barHorizontal_yellow (2).png" id="3_2jqlc"]
+[ext_resource type="Texture2D" uid="uid://c1m168h115ixx" path="res://resources/barHorizontal_green (2).png" id="4_6yn8r"]
 
 [sub_resource type="Animation" id="Animation_idv2h"]
 length = 0.001
@@ -105,5 +107,23 @@ position = Vector2(-17, -40)
 position = Vector2(0.25, 4)
 shape = SubResource("RectangleShape2D_20qis")
 
+[node name="HPbar" type="Node2D" parent="."]
+position = Vector2(-15, -20)
+scale = Vector2(0.14802, 0.308496)
+
+[node name="Control" type="Control" parent="HPbar"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="hpvalue" type="TextureProgressBar" parent="HPbar/Control"]
+layout_mode = 0
+offset_right = 200.0
+offset_bottom = 40.0
+max_value = 4.0
+value = 4.0
+texture_under = ExtResource("3_2jqlc")
+texture_progress = ExtResource("4_6yn8r")
+
 [connection signal="area_entered" from="Area2D" to="." method="_on_area_2d_area_entered"]
-[connection signal="area_shape_entered" from="Area2D" to="." method="_on_area_2d_area_shape_entered"]

@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://cdleudxrbqxni"
+path="res://.godot/imported/y2mate.is - Jingle Cats Silent Night-d9LqRl7tqf4-192k-1702309507.mp3-0e678ab5cbd58c364f7be4f41230f4f2.mp3str"
+
+[deps]
+
+source_file="res://resources/y2mate.is - Jingle Cats Silent Night-d9LqRl7tqf4-192k-1702309507.mp3"
+dest_files=["res://.godot/imported/y2mate.is - Jingle Cats Silent Night-d9LqRl7tqf4-192k-1702309507.mp3-0e678ab5cbd58c364f7be4f41230f4f2.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

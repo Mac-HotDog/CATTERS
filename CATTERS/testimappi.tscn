@@ -1,0 +1,63 @@
+[gd_scene load_steps=5 format=3 uid="uid://bo23tkm6h71dv"]
+
+[ext_resource type="PackedScene" uid="uid://ba0ya40gk0msd" path="res://player.tscn" id="1_78t34"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_vh1cs"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_01f26"]
+radius = 47.0
+height = 160.0
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_id1l1"]
+radius = 46.9092
+height = 1288.01
+
+[node name="testimappi" type="Node2D"]
+
+[node name="DirectionalLight2D" type="DirectionalLight2D" parent="."]
+visible = false
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+
+[node name="MeshInstance2D" type="MeshInstance2D" parent="StaticBody2D"]
+position = Vector2(300, 570)
+scale = Vector2(89.5, 85)
+mesh = SubResource("CapsuleMesh_vh1cs")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(435, 567)
+shape = SubResource("CapsuleShape2D_01f26")
+
+[node name="StaticBody2D2" type="StaticBody2D" parent="."]
+
+[node name="MeshInstance2D" type="MeshInstance2D" parent="StaticBody2D2"]
+position = Vector2(432, 574)
+scale = Vector2(89.5, 85)
+mesh = SubResource("CapsuleMesh_vh1cs")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D2"]
+position = Vector2(300, 567)
+shape = SubResource("CapsuleShape2D_01f26")
+
+[node name="StaticBody2D3" type="StaticBody2D" parent="."]
+
+[node name="MeshInstance2D" type="MeshInstance2D" parent="StaticBody2D3"]
+position = Vector2(588, 542.5)
+rotation = 1.58377
+scale = Vector2(89.5, 119.5)
+mesh = SubResource("CapsuleMesh_vh1cs")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D3"]
+position = Vector2(1607, 546)
+rotation = 1.5715
+scale = Vector2(0.916934, 1.77331)
+shape = SubResource("CapsuleShape2D_id1l1")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="StaticBody2D3"]
+position = Vector2(1109, 325)
+rotation = 3.14647
+scale = Vector2(0.916934, 1.77331)
+shape = SubResource("CapsuleShape2D_id1l1")
+
+[node name="Player" parent="." instance=ExtResource("1_78t34")]
+position = Vector2(305, 424)

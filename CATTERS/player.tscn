@@ -1,4 +1,4 @@
-[gd_scene load_steps=46 format=3 uid="uid://ba0ya40gk0msd"]
+[gd_scene load_steps=50 format=3 uid="uid://ba0ya40gk0msd"]
 
 [ext_resource type="Texture2D" uid="uid://cpo4ak2s6b35m" path="res://art/Tile.png" id="1_rbpt3"]
 [ext_resource type="Script" path="res://hpbar.gd" id="2_ng4mt"]
@@ -342,6 +342,12 @@ size = Vector2(20, 19)
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_ljogx"]
 animation = &"attack_melee_fast"
 
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_msllj"]
+animation = &"dead"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_4u8mo"]
+animation = &"death"
+
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_4g4mg"]
 animation = &"idle_sit"
 
@@ -353,6 +359,9 @@ animation = &"jump"
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_dfgvi"]
 animation = &"standing_idle"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_ewi4t"]
+animation = &"taking_dmg"
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_1khs3"]
 animation = &"walk"
@@ -432,11 +441,19 @@ advance_condition = &"melee fast"
 switch_mode = 2
 advance_mode = 2
 
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_patv5"]
+switch_mode = 2
+advance_mode = 2
+
 [sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_il2s0"]
 states/End/position = Vector2(1084, 68)
 states/Start/position = Vector2(36, -1.32761)
 states/attack_melee_fast/node = SubResource("AnimationNodeAnimation_ljogx")
 states/attack_melee_fast/position = Vector2(686.212, -100.328)
+states/dead/node = SubResource("AnimationNodeAnimation_msllj")
+states/dead/position = Vector2(242.212, -242.579)
+states/death/node = SubResource("AnimationNodeAnimation_4u8mo")
+states/death/position = Vector2(36, -242.579)
 states/idle_sit/node = SubResource("AnimationNodeAnimation_4g4mg")
 states/idle_sit/position = Vector2(160, -47.4864)
 states/idle_sit2/node = SubResource("AnimationNodeAnimation_lpahj")
@@ -445,10 +462,12 @@ states/jump/node = SubResource("AnimationNodeAnimation_llwa1")
 states/jump/position = Vector2(391, -47.4864)
 states/standing_idle/node = SubResource("AnimationNodeAnimation_dfgvi")
 states/standing_idle/position = Vector2(531, 62.5136)
+states/taking_dmg/node = SubResource("AnimationNodeAnimation_ewi4t")
+states/taking_dmg/position = Vector2(36, -142.579)
 states/walk/node = SubResource("AnimationNodeAnimation_1khs3")
 states/walk/position = Vector2(391, 173.514)
-transitions = ["Start", "idle_sit", SubResource("AnimationNodeStateMachineTransition_fu78r"), "idle_sit", "idle_sit2", SubResource("AnimationNodeStateMachineTransition_hnu0q"), "idle_sit", "jump", SubResource("AnimationNodeStateMachineTransition_1p55t"), "idle_sit", "walk", SubResource("AnimationNodeStateMachineTransition_vtpng"), "walk", "jump", SubResource("AnimationNodeStateMachineTransition_jy8my"), "idle_sit2", "walk", SubResource("AnimationNodeStateMachineTransition_07lef"), "idle_sit2", "jump", SubResource("AnimationNodeStateMachineTransition_6ukaf"), "jump", "standing_idle", SubResource("AnimationNodeStateMachineTransition_mkx27"), "standing_idle", "idle_sit", SubResource("AnimationNodeStateMachineTransition_c820t"), "walk", "standing_idle", SubResource("AnimationNodeStateMachineTransition_vbdx3"), "standing_idle", "jump", SubResource("AnimationNodeStateMachineTransition_8y76b"), "standing_idle", "walk", SubResource("AnimationNodeStateMachineTransition_ehoe2"), "walk", "idle_sit", SubResource("AnimationNodeStateMachineTransition_uym0o"), "idle_sit", "attack_melee_fast", SubResource("AnimationNodeStateMachineTransition_sfvjt"), "jump", "attack_melee_fast", SubResource("AnimationNodeStateMachineTransition_vt56k"), "standing_idle", "attack_melee_fast", SubResource("AnimationNodeStateMachineTransition_dovhn"), "walk", "attack_melee_fast", SubResource("AnimationNodeStateMachineTransition_s8e62"), "idle_sit2", "attack_melee_fast", SubResource("AnimationNodeStateMachineTransition_rlxje"), "attack_melee_fast", "idle_sit", SubResource("AnimationNodeStateMachineTransition_c2evb")]
-graph_offset = Vector2(-135.788, -132.979)
+transitions = ["Start", "idle_sit", SubResource("AnimationNodeStateMachineTransition_fu78r"), "idle_sit", "idle_sit2", SubResource("AnimationNodeStateMachineTransition_hnu0q"), "idle_sit", "jump", SubResource("AnimationNodeStateMachineTransition_1p55t"), "idle_sit", "walk", SubResource("AnimationNodeStateMachineTransition_vtpng"), "walk", "jump", SubResource("AnimationNodeStateMachineTransition_jy8my"), "idle_sit2", "walk", SubResource("AnimationNodeStateMachineTransition_07lef"), "idle_sit2", "jump", SubResource("AnimationNodeStateMachineTransition_6ukaf"), "jump", "standing_idle", SubResource("AnimationNodeStateMachineTransition_mkx27"), "standing_idle", "idle_sit", SubResource("AnimationNodeStateMachineTransition_c820t"), "walk", "standing_idle", SubResource("AnimationNodeStateMachineTransition_vbdx3"), "standing_idle", "jump", SubResource("AnimationNodeStateMachineTransition_8y76b"), "standing_idle", "walk", SubResource("AnimationNodeStateMachineTransition_ehoe2"), "walk", "idle_sit", SubResource("AnimationNodeStateMachineTransition_uym0o"), "idle_sit", "attack_melee_fast", SubResource("AnimationNodeStateMachineTransition_sfvjt"), "jump", "attack_melee_fast", SubResource("AnimationNodeStateMachineTransition_vt56k"), "standing_idle", "attack_melee_fast", SubResource("AnimationNodeStateMachineTransition_dovhn"), "walk", "attack_melee_fast", SubResource("AnimationNodeStateMachineTransition_s8e62"), "idle_sit2", "attack_melee_fast", SubResource("AnimationNodeStateMachineTransition_rlxje"), "attack_melee_fast", "idle_sit", SubResource("AnimationNodeStateMachineTransition_c2evb"), "death", "dead", SubResource("AnimationNodeStateMachineTransition_patv5")]
+graph_offset = Vector2(-135.788, -276.579)
 
 [node name="Player" type="CharacterBody2D"]
 script = SubResource("GDScript_4msjr")

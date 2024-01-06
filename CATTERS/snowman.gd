@@ -5,16 +5,18 @@ extends CharacterBody2D
 const JUMP_VELOCITY = -300.0
 var died = false
 var hp = 2#? 2 lyöntiä/päälle hyppyä
-var should_jump = true #lippu hyppimiselle, true toistaseks
+var should_jump = false #lippu hyppimiselle, true toistaseks
 var suunta
 var vektori#move_and_collide, hyppy liike
 var hyppää = false# lippu hyppy animaatiolle
 @onready var animation_player = $AnimationPlayer
+@onready var timer = $Timer#hyppytimer
 
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 
 func _ready():
+	timer.start()
 	var x = randf()
 	if x > 0.5:
 		suunta = "oikea"
@@ -26,8 +28,10 @@ func _ready():
 func _physics_process(delta):
 	if hp == 0:
 		dead()
+	if is_on_floor():
+		play_animation("idle")
 	movement(delta)
-	print(velocity)
+	#print(velocity)
 	
 func play_animation(animation):
 	if animation:
@@ -38,21 +42,27 @@ func dead():
 	play_animation("dead")
 
 func movement(delta):
+	if is_on_floor():
+		velocity.x = 0
 	if not is_on_floor():
 		velocity.y += gravity * delta
-	if suunta == "oikea":# and should_jump:
-		vektori += global_position.x + 3
-		vektori += global_position.y + 1
-		
-		var collision = move_and_collide(vektori * delta * 2)
-		if collision:
-			print("lumiukko osui johonki")
-			#var collateral = collision.get_collider()
-			#if collateral is Enemy:
-				#collateral.change_health(-player.kick_dmg_returner())
-	#velocity.x = speed
-	#move_and_slide()
-
+	if suunta == "oikea" and should_jump:
+		#vektori = Vector2(global_position.x + 300, global_position.y + 400)
+		play_animation("jump")
+		velocity.y = JUMP_VELOCITY
+		velocity.x = 200
+		should_jump = false
+		print("hyppy")
+	if suunta == "vasen" and should_jump:
+		#vektori = Vector2(global_position.x - 300, global_position.y + 400)
+		play_animation("jump")
+		velocity.y = JUMP_VELOCITY
+		velocity.x = -200
+		should_jump = false
+		print("hyppy")
+	
+	#velocity = Vector2.ZERO
+	move_and_slide()
 
 
 func turn_around():#ei toimi
@@ -74,4 +84,9 @@ func _on_area_2d_area_entered(area):#pelaajan meleen hitboxi
 	hp = -1
 
 
+func _on_timer_timeout():#timer kutsuu tätä func x määrä sekuntien jälkeen
+	if is_on_floor():
+		print("timer")
+		should_jump = true
+		timer.start()
 

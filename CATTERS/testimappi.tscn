@@ -65,3 +65,4 @@ position = Vector2(305, 424)
 
 [node name="snowman" parent="." instance=ExtResource("2_bcl2g")]
 position = Vector2(568, 408)
+speed = 100

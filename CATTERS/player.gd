@@ -10,10 +10,12 @@ const JUMP_VELOCITY = -400.0
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 
 @onready var attackarea = $Sprite2D/Area2Dattack/CollisionShape2D
+var enemy
 var attacking
 var suunta = "oikea"
+var knocked = false #lippu vihusta kimpoamiselle
 var timer_called = false #lippu timer funktiolle
-var hp = 10
+var hp = 100
 
 var state_machine
 var allow_sit_idle = false #lippu
@@ -23,6 +25,8 @@ var jumped #lippu animaatiolle
 
 
 func _ready():
+	$HPbar/Control/hpvalue.max_value = hp
+	$HPbar/Control/hpvalue.value = hp
 	attackarea.disabled = true 
 	state_machine = anim_tree.get("parameters/playback")
 
@@ -53,14 +57,10 @@ func _physics_process(delta):
 			suunta = "oikea"
 			$Sprite2D.flip_h = false
 			attackarea.global_position.x = self.global_position.x + 17
-			#print(velocity)
 		if direction  == -1:
 			suunta = "vasen"
 			$Sprite2D.flip_h = true
 			attackarea.global_position.x = self.global_position.x - 17
-			#print(velocity)
-		#print(should_walk_right())
-		#print(velocity.x)
 	else:
 		velocity.x = move_toward(velocity.x, 0, SPEED)
 	if hp <= 0:
@@ -73,7 +73,8 @@ func _physics_process(delta):
 	anim_tree.set("parameters/conditions/istumis idle",should_sit_idle())
 	anim_tree.set("parameters/conditions/hyppy",should_jump())
 	#print(should_sit_idle())
-
+	
+	bounce(delta)#knockback vihusta
 	move_and_slide()
 
 #animaatioita varten
@@ -114,8 +115,10 @@ func should_attack():
 	else:
 		return false
 
-func bounce():
-	pass
+func bounce(delta):#knockback vihusta
+	if knocked:
+		velocity.y = -100
+		move_and_slide()
 
 func timer_func(x):
 	timer_called = true
@@ -135,3 +138,17 @@ func _on_animation_tree_animation_started(anim_name):
 func take_damage(ammount):
 	hp = hp - ammount
 	$HPbar/Control/hpvalue.value = hp
+
+
+func _on_area_2d_area_entered(area):
+	if area.get_parent() is Enemy:
+		enemy = area.get_parent()
+		var type = enemy.type_and_dmg_returner()[0]
+		var dmg = enemy.type_and_dmg_returner()[1]
+		if not enemy.is_dead():
+			take_damage(dmg)
+		
+		if type == "snowman":
+			knocked = true
+			await get_tree().create_timer(0.1).timeout
+			knocked = false

@@ -358,7 +358,7 @@ libraries = {
 }
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(-1, 5.5)
+position = Vector2(-1, 7)
 shape = SubResource("RectangleShape2D_rnxmd")
 
 [node name="AnimationTree" type="AnimationTree" parent="."]
@@ -397,5 +397,12 @@ value = 10.0
 texture_under = ExtResource("3_062de")
 texture_progress = ExtResource("4_gxnvh")
 
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+position = Vector2(-1, 7)
+shape = SubResource("RectangleShape2D_rnxmd")
+
 [connection signal="animation_started" from="AnimationTree" to="." method="_on_animation_tree_animation_started"]
 [connection signal="timeout" from="HPbar/Timer" to="HPbar" method="_on_timer_timeout"]
+[connection signal="area_entered" from="Area2D" to="." method="_on_area_2d_area_entered"]

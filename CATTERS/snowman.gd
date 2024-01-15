@@ -1,3 +1,4 @@
+class_name Enemy
 extends CharacterBody2D
 
 
@@ -10,6 +11,8 @@ var should_jump = false #lippu hyppimiselle, true toistaseks
 var suunta
 var vektori#move_and_collide, hyppy liike
 var hyppää = false# lippu hyppy animaatiolle
+@export var type = "snowman"
+@export var dmg = 10
 @onready var animation_player = $AnimationPlayer
 @onready var timer = $Timer#hyppytimer
 
@@ -47,6 +50,9 @@ func _physics_process(delta):
 func play_animation(animation):
 	if animation:
 		animation_player.play(animation)
+
+func is_dead():
+	return died
 
 func dead():
 	died = true
@@ -113,3 +119,6 @@ func _on_timer_timeout():#timer kutsuu tätä func x määrä sekuntien jälkeen
 		should_jump = true
 		timer.start()
 
+func type_and_dmg_returner():
+	var stats = [type, dmg]
+	return stats
